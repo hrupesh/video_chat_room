@@ -1,11 +1,17 @@
 const socket = io("/");
-const myPeer = new myPeer(undefined, {
+const videoGrid = document.getElementById("video-grid");
+const myPeer = new Peer(undefined, {
   host: "/",
-  post: "3001",
+  port: "3001",
 });
 
-socket.emit("join-room", ROOM_ID, 4);
+const myVideo = document.createElement("video");
+myVideo.muted = true;
+
+myPeer.on("open", (id) => {
+  socket.emit("join-room", ROOM_ID, id);
+});
 
 socket.on("user-connected", (userId) => {
-  console.log("Welcome  " + userId);
+  console.log("Welcome  :  " + userId);
 });
