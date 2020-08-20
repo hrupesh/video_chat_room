@@ -52,10 +52,11 @@ function connectToNewUser(userId, stream) {
   });
 
   peers[userId] = call;
+  console.log(peers);
 }
 
 socket.on("user-connected", (userId) => {
-  console.log("Welcome  :  " + userId);
+  //   console.log("Welcome  :  " + userId);
 });
 
 function addVideoStream(video, stream) {
