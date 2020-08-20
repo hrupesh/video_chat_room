@@ -13,11 +13,27 @@ navigator.mediaDevices
     video: true,
     audio: true,
   })
-  .then((stream) => {});
+  .then((stream) => {
+    addVideoStream(myVideo, stream);
+
+    socket.on("user-connected", (userId) => {
+      connectToNewUser(userId, stream);
+    });
+  });
 
 myPeer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id);
 });
+
+function connectToNewUser(userId, stream) {
+  const call = myPeer.call(userId, stream);
+  call.on("stream", (userVideoStream) => {
+    addVideoStream(video, userVideoStream);
+  });
+  call.on("close", () => {
+    video.remove();
+  });
+}
 
 socket.on("user-connected", (userId) => {
   console.log("Welcome  :  " + userId);
@@ -28,4 +44,5 @@ function addVideoStream(video, stream) {
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
+  videoGrid.append(video);
 }
